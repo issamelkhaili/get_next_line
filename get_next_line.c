@@ -6,7 +6,7 @@
 /*   By: isel-kha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 03:35:00 by isel-kha          #+#    #+#             */
-/*   Updated: 2025/01/06 06:26:48 by isel-kha         ###   ########.fr       */
+/*   Updated: 2025/01/06 08:30:14 by isel-kha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,19 +75,35 @@ static	char	*ft_upate_stash(char	*stash)
 	j = 0;
 	if(!stash)
 		return (NULL);
-	while(stash[i] != '\n' && stash[i] != '\0')
+	while (stash[i] != '\n' && stash[i] != '\0')
 		i++;
-	while(stash[i + j])
+	while (stash[i + j])
 		j++;
+	if (stash[i] == '\n')
+		i++;
 	new_stash = malloc(j + 1);
-	if(!new_stash)
-		return(NULL);
+	if (!new_stash)
+		return (NULL);
+	j = 0;
 	while (stash[i] != '\0')
 	{
-		new_stash[i] = stash[i+j];
+		new_stash[j] = stash[i];
 		i++;
+		j++;
 	}
 	new_stash[j] = '\0';
 	free(stash);
 	return (new_stash);
 }
+
+char *get_next_line(int fd)
+{
+	static	char	*leftover;
+	if (fd > 0)
+		reuturn (NULL);
+	if (BUFFER_SIZE <= 0)
+		return (NULL);
+
+
+}
+
