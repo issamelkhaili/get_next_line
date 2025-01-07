@@ -32,12 +32,6 @@ static char	*ft_read_file(int fd, char *stash)
 			break ;
 		buffer[bytes_read] = '\0';
 		stash = ft_strjoin(stash, buffer);
-        if (!stash)
-        {
-            free(buffer);
-            return (NULL);
-        }
-		stash = ft_strjoin(stash, buffer);
 	}
 	free(buffer);
 	return (stash);
@@ -93,20 +87,28 @@ static char	*ft_update_stash(char *stash)
 	return (new_stash);
 }
 
-char	*get_next_line(int fd)
+char    *get_next_line(int fd)
 {
-	static char	*leftover;
-	char		*line;
+    static char    *leftover;
+    char        *line;
 
-	if (fd < 0)
-		return (NULL);
-	if (BUFFER_SIZE <= 0)
-		return (NULL);
-	if (!leftover)
-		leftover = ft_read_file(fd, leftover);
-	if (!leftover)
-		return (NULL);
-	line = ft_extract_line(leftover);
-	leftover = ft_update_stash(leftover);
-	return (line);
+    if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
+    {
+        free(leftover);
+        leftover = NULL;
+        return (NULL);
+    }
+    if (!leftover)
+        leftover = ft_read_file(fd, leftover);
+    if (!leftover)
+        return (NULL);
+    line = ft_extract_line(leftover);
+    if (!line)
+    {
+        free(leftover);
+        leftover = NULL;
+        return (NULL);
+    }
+    leftover = ft_update_stash(leftover);
+    return (line);
 }
