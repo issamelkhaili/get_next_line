@@ -69,7 +69,7 @@ char	*ft_read_file(int fd)
 
 char	*get_next_line(int fd)
 {
-	char	*stash;
+	static char	*stash;
 	char	*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
