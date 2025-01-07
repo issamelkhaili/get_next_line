@@ -1,2 +1,5 @@
-234567890
-This is a test
+First line
+Second line
+Third line with no newline```
+
+2. `empty.txt` - A completely empty file

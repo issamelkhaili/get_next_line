@@ -6,7 +6,7 @@
 /*   By: isel-kha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 03:35:00 by isel-kha          #+#    #+#             */
-/*   Updated: 2025/01/06 10:21:37 by isel-kha         ###   ########.fr       */
+/*   Updated: 2025/01/07 06:47:17 by isel-kha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -20,15 +20,23 @@ static char	*ft_read_file(int fd, char *stash)
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
-	while (bytes_read > 0)
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		buffer[bytes_read] = '\0';
 		if (bytes_read == -1)
 		{
 			free(buffer);
 			return (NULL);
 		}
+		if (bytes_read == 0)
+			break ;
+		buffer[bytes_read] = '\0';
+		stash = ft_strjoin(stash, buffer);
+        if (!stash)
+        {
+            free(buffer);
+            return (NULL);
+        }
 		stash = ft_strjoin(stash, buffer);
 	}
 	free(buffer);
@@ -75,7 +83,12 @@ static char	*ft_update_stash(char *stash)
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	new_stash = ft_strjoin("", &stash[i]);
+	if (stash[i] == '\0')
+	{
+		free(stash);
+		return (NULL);
+	}
+	new_stash = ft_strjoin(NULL, &stash[i]);
 	free(stash);
 	return (new_stash);
 }
@@ -96,15 +109,4 @@ char	*get_next_line(int fd)
 	line = ft_extract_line(leftover);
 	leftover = ft_update_stash(leftover);
 	return (line);
-}
-
-int main()
-{
-    int    fd;
-    char *result;
-    fd = open("test.txt", O_RDWR);
-    //get_next_line(fd);
-	get_next_line(fd);
-    result = get_next_line(fd);
-    printf("%s",result);
 }
