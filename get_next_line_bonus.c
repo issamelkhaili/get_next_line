@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: isel-kha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/05 10:50:09 by isel-kha          #+#    #+#             */
-/*   Updated: 2025/01/08 18:24:32 by isel-kha         ###   ########.fr       */
+/*   Created: 2025/01/08 16:15:10 by isel-kha          #+#    #+#             */
+/*   Updated: 2025/01/08 18:20:04 by isel-kha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+
+#include "get_next_line_bonus.h"
 
 char	*freenull(char *tofree)
 {
@@ -101,15 +102,15 @@ char	*ft_update_store(char *store)
 
 char	*get_next_line(int fd)
 {
-	static char	*store;
+	static char	*store[MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
 		return (NULL);
-	store = ft_read_line(fd, store);
-	if (!store)
+	store[fd] = ft_read_line(fd, store[fd]);
+	if (!store[fd])
 		return (NULL);
-	line = ft_extract_line(store);
-	store = ft_update_store(store);
+	line = ft_extract_line(store[fd]);
+	store[fd] = ft_update_store(store[fd]);
 	return (line);
 }
