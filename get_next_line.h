@@ -6,7 +6,7 @@
 /*   By: isel-kha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 10:50:09 by isel-kha          #+#    #+#             */
-/*   Updated: 2025/01/07 03:33:53 by isel-kha         ###   ########.fr       */
+/*   Updated: 2025/01/08 15:17:21 by isel-kha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@
 # include <limits.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 3 
 # endif
 
+char	*ft_strdup(const char *s);
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_strlen(const char *s);

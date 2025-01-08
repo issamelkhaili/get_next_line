@@ -5,32 +5,63 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: isel-kha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/06 03:35:00 by isel-kha          #+#    #+#             */
-/*   Updated: 2025/01/07 06:47:17 by isel-kha         ###   ########.fr       */
+/*   Created: 2025/01/05 10:50:09 by isel-kha          #+#    #+#             */
+/*   Updated: 2025/01/08 15:16:38 by isel-kha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-char	*ft_extract_line(char *str)
+char	*freenull(char *tofree)
+{
+	free(tofree);
+	return (NULL);
+}
+
+char	*ft_read_line(int fd, char *store)
+{
+	char	*buffer;
+	int		bytes_read;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (freenull(store));
+	bytes_read = 1;
+	while (!ft_strchr(store, '\n') && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
+			return (freenull(store));
+		if (bytes_read == 0)
+			break ;
+		buffer[bytes_read] = '\0';
+		store = ft_strjoin(store, buffer);
+		if (!store)
+			return (freenull(store));
+	}
+	free(buffer);
+	return (store);
+}
+
+char	*ft_extract_line(char *store)
 {
 	char	*line;
 	int		i;
 
-	if (!str)
-		return (NULL);
 	i = 0;
-	while (str[i] != '\n' && str[i] != '\0')
+	if (!store || store[0] == '\0')
+		return (NULL);
+	while (store[i] != '\n' && store[i] != '\0')
 		i++;
 	line = malloc(i + 2);
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (str[i] != '\n' && str[i] != '\0')
+	while (store[i] != '\n' && store[i] != '\0')
 	{
-		line[i] = str[i];
+		line[i] = store[i];
 		i++;
 	}
-	if (str[i] == '\n')
+	if (store[i] == '\n')
 	{
 		line[i] = '\n';
 		i++;
@@ -39,45 +70,43 @@ char	*ft_extract_line(char *str)
 	return (line);
 }
 
-char	*ft_read_file(int fd)
+char	*ft_update_store(char *store)
 {
-	char	*buffer;
-	char	*stash;
-	int		bytes_read;
+	int		i;
+	int		j;
+	char	*new_store;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
-	stash = NULL;
-	bytes_read = 1;
-	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	i = 0;
+	while (store[i] && store[i] != '\n')
+		i++;
+	if (!store[i])
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		if (bytes_read == 0)
-			break ;
-		buffer[bytes_read] = '\0';
-		stash = ft_strjoin(stash, buffer);
+		free(store);
+		return (NULL);
 	}
-	free(buffer);
-	return (stash);
+	new_store = malloc(ft_strlen(store) - i);
+	if (!new_store)
+		return (freenull(store));
+	i++;
+	j = 0;
+	while (store[i])
+		new_store[j++] = store[i++];
+	new_store[j] = '\0';
+	free(store);
+	return (new_store);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
-	char	*line;
+	static char	*store;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
 		return (NULL);
-	stash = ft_read_file(fd);
-	if (!stash)
+	store = ft_read_line(fd, store);
+	if (!store)
 		return (NULL);
-	line = ft_extract_line(stash);
-	free(stash);
+	line = ft_extract_line(store);
+	store = ft_update_store(store);
 	return (line);
 }

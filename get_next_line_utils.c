@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utlis.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: isel-kha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 10:55:35 by isel-kha          #+#    #+#             */
-/*   Updated: 2025/01/07 01:50:45 by isel-kha         ###   ########.fr       */
+/*   Updated: 2025/01/08 15:19:25 by isel-kha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,48 +24,46 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-static char	*ft_create_str(char *s1)
+char	*ft_strdup(const char *s)
 {
-	char	*new;
+	char	*result;
+	char	*ptr;
 
-	if (!s1)
-	{
-		new = malloc(1);
-		if (!new)
-			return (NULL);
-		new[0] = '\0';
-		return (new);
-	}
-	return (s1);
+	if (!s)
+		return (NULL);
+	result = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!result)
+		return (NULL);
+	ptr = result;
+	while (*s)
+		*ptr++ = *s++;
+	*ptr = '\0';
+	return (result);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char	*s1, char	*s2)
 {
-	size_t	i;
-	size_t	j;
-	char	*str;
+	char	*result;
+	int		i;
+	int		j;
 
-	s1 = ft_create_str(s1);
-	if (!s2 || !s1)
+	if (!s1)
+		return (ft_strdup(s2));
+	else if (!s2)
+		return (ft_strdup(s1));
+	result = malloc((ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!result)
 		return (NULL);
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!str)
-	{
-		free(s1);
-		return (NULL);
-	}
 	i = 0;
 	j = 0;
 	while (s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-		str[i++] = s2[j++];
-	str[i] = '\0';
-	free(s1);
-	return (str);
+		result[j++] = s1[i++];
+	i = 0;
+	while (s2[i])
+		result[j++] = s2[i++];
+	result[j] = '\0';
+	free (s1);
+	return (result);
 }
 
 char	*ft_strchr(char *s, int c)
